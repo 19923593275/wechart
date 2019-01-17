@@ -18,12 +18,11 @@ import java.util.Date;
 @AutoConfigureAfter(MybatisAutoConfiguration.class)
 public interface UserMapper {
 
-    @Select("select * from wechat_user where user_open_id = #{openId}")
     User queryUserInfoByOpenId(@Param("openId") String openId);
 
-    @Insert("insert into wechat_user () values ()")
+    @Insert("insert into wechat_user (user_open_id,create_date,is_follow,follow_date,gender,nick_name,head_img) values (#{openId},#{createDate},#{isfllow},#{createDate},#{gender},#{nickName},#{headImg})")
     void addUserInfo(@Param("openId") String openId, @Param("createDate") Date createDate, @Param("isfllow") int isfllow, @Param("gender") int gender, @Param("nickName") String nickName, @Param("headImg") String headImg);
 
-    @Update("update")
-    void updateUserInfo(String openId, String nickName, String headImg, int gender, int isfllow);
+    @Update("update wechat_user set nick_name = #{nickName},head_img = #{headImg},gender = #{gender},is_follow = #{isfllow} where user_open_id = #{openId}")
+    void updateUserInfo(@Param("openId") String openId, @Param("nickName") String nickName, @Param("headImg") String headImg, @Param("gender") int gender, @Param("isfllow") int isfllow);
 }

@@ -19,7 +19,7 @@ public class UserUtil {
      * @param session
      * @param userCache
      */
-    public void saveUserSession(HttpSession session, UserCache userCache){
+    public static void saveUserSession(HttpSession session, UserCache userCache){
         if (userCache == null) {
             session.removeAttribute(UserUtil.SESSION_LOGIN_KEY);
         } else {
@@ -32,7 +32,7 @@ public class UserUtil {
      * @param session
      * @return
      */
-    public UserCache getUserInfoBySession(HttpSession session) {
+    public static UserCache getUserInfoBySession(HttpSession session) {
         if (session == null) {
             return null;
         }

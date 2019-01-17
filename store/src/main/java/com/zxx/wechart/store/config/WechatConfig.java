@@ -1,6 +1,7 @@
 package com.zxx.wechart.store.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * 公众号开发配置类，保存一些必要的配置
@@ -18,12 +19,10 @@ public class WechatConfig {
     }
 
     //第三方用户唯一凭证
-    @Value("wechat.appid")
-    public static final String APPID = "wx5608546bb78eda5f";
+    public static String APPID = "wxe98844338a5b9034";
 
     //第三方用户唯一凭证的秘钥
-    @Value("wechat.appsecret")
-    public static final String SECRET  = "4d0a7dc52428446c2d5053d6ff56704c";
+    public static String SECRET  = "493cd9319ecac8ad7e4dc0afc229d142";
 
     //获取access_token的接口请求地址
     public static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + APPID + "&secret=" + SECRET;
@@ -53,7 +52,7 @@ public class WechatConfig {
     public static final String GET_BASIC_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
 
     //通过code换取网页授权access_token的接口地址
-    public static final String GET_USER_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+WechatConfig.APPID+"&secret="+WechatConfig.SECRET+"&code=CODE&grant_type=authorization_code";
+    public static final String GET_USER_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code";
 
     //根据网页授权access_token和openid换取用户信息的接口地址
     public static final String GET_CODE_INFO_URL = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";

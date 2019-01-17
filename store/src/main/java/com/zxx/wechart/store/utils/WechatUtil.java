@@ -23,12 +23,14 @@ public class WechatUtil {
         try{
             String wechatResponse = null;
             String url = WechatConfig.GET_USER_TOKEN_URL;
-            url = url.replace("CODE", code);
+            url = String.format(url, WechatConfig.APPID, WechatConfig.SECRET, code);
             wechatResponse = HttpUtil.httpGet(url);
             JSONObject jsonObject = JSON.parseObject(wechatResponse);
             if (jsonObject == null) {
                 return null;
             }
+            logger.info("wechartTOken = =====" + jsonObject.toString());
+            logger.info("openId ===" + jsonObject.getString("openid"));
             wechatUserToken.setAccessToken(jsonObject.getString("access_token"));
             wechatUserToken.setExpiresIn(jsonObject.getByteValue("expires_in"));
             wechatUserToken.setOpeniId(jsonObject.getString("openid"));

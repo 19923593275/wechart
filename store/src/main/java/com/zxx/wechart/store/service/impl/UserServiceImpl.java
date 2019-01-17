@@ -63,8 +63,20 @@ public class UserServiceImpl implements UserService{
             throw new ServiceException(CodeConstant.WECHAT_USER_INFO_NULL);
         }
         UserRsp userRsp = this.addOrUpdateUser(user, wechatUserInfo);
-        if (userRsp == null) {
+        if (userRsp == null || userRsp.getIs_follow() != 1) {
+            session.invalidate();
             throw new ServiceException(CodeConstant.WECHAT_USER_INFO_NULL);
+        } else {
+            userRsp.setUser_token(wechatUserToken.getAccessToken());
+            UserCache userCache = new UserCache();
+            userCache.setGengder(userRsp.getGengder());
+            userCache.setIs_follow(userRsp.getIs_follow());
+            userCache.setNick_name(userRsp.getNick_name());
+            userCache.setUser_name(userRsp.getUser_name());
+            userCache.setUser_open_id(userRsp.getUser_open_id());
+            userCache.setUser_tel(userRsp.getUser_tel());
+            userCache.setUserToken(userRsp.getUser_token());
+            UserUtil.saveUserSession(session, userCache);
         }
         return userRsp;
     }
@@ -80,7 +92,7 @@ public class UserServiceImpl implements UserService{
     }
 
     public UserRsp addOrUpdateUser(User user, WechatUserInfo wechatUserInfo) {
-        UserRsp userRsp = null;
+        UserRsp userRsp = new UserRsp();
         try{
             int isfllow = wechatUserInfo.getSubscribe();
             if (isfllow == 0) {

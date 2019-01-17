@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 @RestController
@@ -35,12 +38,13 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Response login(HttpServletRequest request, Map<String, String> params) {
+    public Response login(HttpServletRequest request, @RequestBody Map<String, String> params) {
         Response response = null;
         try{
             String code = params.get("code");
             if(StringUtils.isEmpty(code)) {
                 response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
+                return response;
             }
             UserRsp userRsp = userService.login(request, code);
             response = Response.success(userRsp);
@@ -157,4 +161,9 @@ public class UserController {
         return "创建菜单成功 token = " + WechatConfig.getToken();
     }
 
+    public static void main(String[] args) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:hh:ss");
+        String str = sdf.format(new Date());
+        System.err.println("ddd "+ str);
+    }
 }

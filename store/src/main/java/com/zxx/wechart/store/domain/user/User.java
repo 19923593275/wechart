@@ -1,5 +1,7 @@
 package com.zxx.wechart.store.domain.user;
 
+import org.apache.ibatis.type.Alias;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -8,6 +10,7 @@ import java.util.Date;
  * @Date ： 2020/1/15 13:47
  * @DES : 对应user用户表数据
  */
+@Alias("userMap")
 public class User implements Serializable {
 
     private String user_open_id;
