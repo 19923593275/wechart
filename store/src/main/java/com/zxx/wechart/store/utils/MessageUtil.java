@@ -14,13 +14,13 @@ public class MessageUtil {
     public static String setMessage(String fromUser,String toUser,String content, String msgId){
         String time = new Date().getTime() + "";
 
-        return "<xml>\n" +
-                "  <ToUserName><![CDATA["+ fromUser +"]]></ToUserName>\n" +
-                "  <FromUserName><![CDATA["+ toUser +"]]></FromUserName>\n" +
-                "  <CreateTime>"+ time +"</CreateTime>\n" +
-                "  <MsgType><![CDATA[text]]></MsgType>\n" +
-                "  <Content><![CDATA["+ content +"]]></Content>\n" +
-                "  <MsgId>"+ msgId +"</MsgId>\n" +
+        return "<xml>" +
+                "  <ToUserName><![CDATA["+ toUser +"]]></ToUserName>" +
+                "  <FromUserName><![CDATA["+ fromUser +"]]></FromUserName>" +
+                "  <CreateTime>"+ time +"</CreateTime>" +
+                "  <MsgType><![CDATA[text]]></MsgType>" +
+                "  <Content><![CDATA["+ content +"]]></Content>" +
+                "  <MsgId>"+ msgId +"</MsgId>" +
                 "</xml>";
 
     }
