@@ -22,29 +22,27 @@ public class QRCodeQueue {
     public static final int THREADS = 15;
 
     public static void startListen() {
-        for (int i=0; i< THREADS; i++) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    while (true) {
-                        try {
-                            String openId = codeQueue.take();
-                            //创建二维码将用户的openid作为参数,用户后期数据消费,同时获取ticket
-                            String ticket = QRCodeUtil.createQRCode(openId);
-                            //生成海报 背景图
-                            File file = PosterUtil.createPoster(WechatConfig.GET_QRCODE_URL+ "?ticket=" + ticket,
-                                    "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3172678312,3965332525&fm=26&gp=0.jpg");
-                            //将海报上传至素材
-                            String mediaId = UploadUtil.uploadImage(file);
-                            System.out.println("上传海报成功!" + mediaId);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        String openId = codeQueue.take();
+                        //创建二维码将用户的openid作为参数,用户后期数据消费,同时获取ticket
+                        String ticket = QRCodeUtil.createQRCode(openId);
+                        //生成海报 背景图
+                        File file = PosterUtil.createPoster(WechatConfig.GET_QRCODE_URL+ "?ticket=" + ticket,
+                                "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3172678312,3965332525&fm=26&gp=0.jpg");
+                        //将海报上传至素材
+                        String mediaId = UploadUtil.uploadImage(file);
+                        System.out.println("上传海报成功!" + mediaId);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
-            };
-            new Thread(runnable).run();
-        }
+            }
+        };
+        new Thread(runnable).run();
     }
 
 }

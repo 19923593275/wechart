@@ -22,8 +22,7 @@ public class MenuUtil {
     //我的订单URL，跳向当前项目中的页面
     private static final String ORDER = "http://sc2ess.natappfree.cc/home.html";
 
-    public static void main(String[] args) {
-        System.out.println("======" + WechatConfig.getToken());
+    public static void createMenu() {
         String paramStr = "{\n" +
                 "  \"button\":[\n" +
                 "    {\n" +
@@ -74,7 +73,7 @@ public class MenuUtil {
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"),paramStr);
         Request request = new Request.Builder()
-                .url(WechatConfig.CREATE_MENU_URL+"?access_token=28_jY4WUfWbkmN42DzeCaEer8wTVRkv5CzvRbg4nQBbeADa2Sd52wDzBCDalc0XrgepU_Cy8pUTC4mRqc-aHPmVPMzv2nNNl_bbri_AqUgBXcFOMrOT_wMg4s442yWWirDAXZMpaHah9fETI3dfBGQbAHAXCM")
+                .url(WechatConfig.CREATE_MENU_URL+"?access_token=" + WechatConfig.getToken())
                 .post(requestBody).build();
         Response response = null;
         try {

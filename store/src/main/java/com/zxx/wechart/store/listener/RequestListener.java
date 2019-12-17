@@ -40,7 +40,7 @@ public class RequestListener implements ApplicationListener {
         TokenUtil.startTask();
         System.out.println("============定时获取access_token===========");
         //监听生成海报的事件
-        QRCodeQueue.startListen();
-        System.out.println("============监听生成海报的事件===========");
+//        QRCodeQueue.startListen();
+//        System.out.println("============监听生成海报的事件===========");
     }
 }

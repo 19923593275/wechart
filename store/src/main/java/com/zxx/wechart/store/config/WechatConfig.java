@@ -19,11 +19,11 @@ public class WechatConfig {
 
     //第三方用户唯一凭证
     @Value("wechat.appid")
-    public static final String APPID = "wxe98844338a5b9034";
+    public static final String APPID = "wx5608546bb78eda5f";
 
     //第三方用户唯一凭证的秘钥
     @Value("wechat.appsecret")
-    public static final String SECRET  = "493cd9319ecac8ad7e4dc0afc229d142";
+    public static final String SECRET  = "4d0a7dc52428446c2d5053d6ff56704c";
 
     //获取access_token的接口请求地址
     public static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + APPID + "&secret=" + SECRET;

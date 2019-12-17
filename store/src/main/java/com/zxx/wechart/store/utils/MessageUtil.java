@@ -1,5 +1,7 @@
 package com.zxx.wechart.store.utils;
 
+import java.util.Date;
+
 public class MessageUtil {
 
     /**
@@ -9,14 +11,17 @@ public class MessageUtil {
      * @param content 回复给用户的内容
      * @return 整理好的XML文本
      * */
-    public static String setMessage(String fromUser,String toUser,String content){
+    public static String setMessage(String fromUser,String toUser,String content, String msgId){
+        String time = new Date().getTime() + "";
 
         return "<xml>\n" +
-                "  <ToUserName><![CDATA["+toUser+"]]></ToUserName>\n" +
-                "  <FromUserName><![CDATA["+fromUser+"]]></FromUserName>\n" +
-                "  <CreateTime>12345678</CreateTime>\n" +
+                "  <ToUserName><![CDATA["+ fromUser +"]]></ToUserName>\n" +
+                "  <FromUserName><![CDATA["+ toUser +"]]></FromUserName>\n" +
+                "  <CreateTime>"+ time +"</CreateTime>\n" +
                 "  <MsgType><![CDATA[text]]></MsgType>\n" +
-                "  <Content><![CDATA["+content+"]]></Content>\n" +
+                "  <Content><![CDATA["+ content +"]]></Content>\n" +
+                "  <MsgId>"+ msgId +"</MsgId>\n" +
                 "</xml>";
+
     }
 }

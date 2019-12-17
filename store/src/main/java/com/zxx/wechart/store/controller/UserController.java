@@ -1,6 +1,9 @@
 package com.zxx.wechart.store.controller;
 
+import com.zxx.wechart.store.config.TokenUtil;
+import com.zxx.wechart.store.config.WechatConfig;
 import com.zxx.wechart.store.queue.QRCodeQueue;
+import com.zxx.wechart.store.utils.MenuUtil;
 import com.zxx.wechart.store.utils.MessageUtil;
 import com.zxx.wechart.store.utils.SignUtil;
 import com.zxx.wechart.store.utils.XMLUtil;
@@ -50,25 +53,6 @@ public class UserController {
         // TODO Auto-generated constructor stub
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String signature = request.getParameter("signature");
-        String timestamp = request.getParameter("timestamp");
-        String nonce = request.getParameter("nonce");
-        String echostr = request.getParameter("echostr");
-
-        PrintWriter out = response.getWriter();
-
-        if(signUtil.checkSignature(signature, timestamp, nonce)){
-            out.print(echostr);
-        }
-    }
-
-    @RequestMapping(value = "/login2", method = RequestMethod.GET)
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        doGet(request, response);
-    }
-
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = {"application/xml;charset=utf-8"})
     public void doRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("===进来了");
@@ -79,7 +63,9 @@ public class UserController {
         //所以我们既然要回复过去，就要颠倒过来
         String fromUser = map.get("ToUserName");
         String toUser = map.get("FromUserName");
+        System.out.println("userId = " + toUser + "\n公众号 = " + fromUser);
         String content = "";
+        String msgId = map.get("MsgId");
         if (map.get("MsgType").equals("event")){
             //如果是被关注事件，向用户回复内容，只需要将整理好的XML文本参数返回给微信即可
             if (map.get("Event").equals("subscribe")){
@@ -126,8 +112,20 @@ public class UserController {
             }
         }
         //把数据包返回给微信服务器，微信服务器再推给用户
-        writer.print(MessageUtil.setMessage(fromUser,toUser, new String(content.getBytes(),"ISO-8859-1")));
+        writer.print(MessageUtil.setMessage(fromUser,toUser, new String(content.getBytes(),"ISO-8859-1"), msgId));
+        System.out.println("已发送到微信服务器 msg = " + content);
         writer.close();
+    }
+
+    @RequestMapping(value = "/config-menu", method = RequestMethod.GET)
+    public String configMencu(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            MenuUtil.createMenu();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return"创建菜单失败 token = " + WechatConfig.getToken();
+        }
+        return "创建菜单成功 token = " + WechatConfig.getToken();
     }
 
 }
