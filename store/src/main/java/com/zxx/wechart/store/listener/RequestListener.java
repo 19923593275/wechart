@@ -1,7 +1,5 @@
 package com.zxx.wechart.store.listener;
 
-import com.zxx.wechart.store.config.TokenUtil;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 /**
