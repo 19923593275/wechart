@@ -1,6 +1,8 @@
 package com.zxx.wechart.store;
 
 import com.zxx.wechart.store.config.TokenUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 @SpringBootApplication
 public class StoreApplication {
+    Logger logger = LogManager.getLogger(this.getClass());
 
 	public static void main(String[] args) {
 		SpringApplication.run(StoreApplication.class, args);
@@ -19,7 +22,7 @@ public class StoreApplication {
 	public class accessTokenStart implements CommandLineRunner {
 		@Override
 		public void run(String... args) throws Exception {
-			System.out.println("执行了第一个任务");
+            logger.info("log4j =======执行了第一个任务");
 			TokenUtil.startTask();
 		}
 	}

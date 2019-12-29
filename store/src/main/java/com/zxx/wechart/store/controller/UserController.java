@@ -1,21 +1,21 @@
 package com.zxx.wechart.store.controller;
 
-import com.zxx.wechart.store.config.TokenUtil;
+import com.zxx.wechart.store.common.CodeConstant;
+import com.zxx.wechart.store.common.Response;
 import com.zxx.wechart.store.config.WechatConfig;
 import com.zxx.wechart.store.queue.QRCodeQueue;
 import com.zxx.wechart.store.utils.MenuUtil;
 import com.zxx.wechart.store.utils.MessageUtil;
 import com.zxx.wechart.store.utils.SignUtil;
 import com.zxx.wechart.store.utils.XMLUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Map;
 
 @RestController
@@ -25,6 +25,17 @@ public class UserController {
     private static final long serialVersionUID = 1L;
 
     private SignUtil signUtil;
+
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public Response login(HttpServletRequest request, Map<String, String> params) {
+        Response response = null;
+        String code = params.get("code");
+        if(StringUtils.isEmpty(code)) {
+            response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
+        }
+        return response;
+    }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String test(HttpServletRequest request) {
@@ -53,12 +64,12 @@ public class UserController {
         // TODO Auto-generated constructor stub
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = {"application/xml;charset=utf-8"})
-    public void doRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @RequestMapping(value = "/wechat", method = RequestMethod.POST, produces = {"application/xml;charset=utf-8"})
+    public String doRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("===进来了");
         //将xml转为Map
         Map<String,String> map = XMLUtil.getMap(request.getInputStream());
-        PrintWriter writer = response.getWriter();
+//        PrintWriter writer = response.getWriter();
         //这里不要弄混了，微信推过来的信息是用户发过来的，所以ToUserName是我们的公众号，FromUserName是用户的微信openid
         //所以我们既然要回复过去，就要颠倒过来
         String fromUser = map.get("ToUserName");
@@ -112,9 +123,10 @@ public class UserController {
             }
         }
         //把数据包返回给微信服务器，微信服务器再推给用户
-        writer.print(MessageUtil.setMessage(fromUser,toUser, new String(content.getBytes(),"ISO-8859-1"), msgId));
+//        writer.print(MessageUtil.setMessage(fromUser,toUser, new String(content.getBytes(),"ISO-8859-1"), msgId));
         System.out.println("已发送到微信服务器 msg = " + content);
-        writer.close();
+//        writer.close();
+        return MessageUtil.setMessage(fromUser,toUser, content, msgId);
     }
 
     @RequestMapping(value = "/config-menu", method = RequestMethod.GET)

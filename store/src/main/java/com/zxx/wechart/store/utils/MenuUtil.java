@@ -3,7 +3,6 @@ package com.zxx.wechart.store.utils;
 import com.zxx.wechart.store.config.SSLConfig;
 import com.zxx.wechart.store.config.WechatConfig;
 import okhttp3.*;
-import org.apache.tomcat.jni.SSLConf;
 
 import java.io.IOException;
 

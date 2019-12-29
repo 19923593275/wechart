@@ -46,6 +46,9 @@ public class WechatConfig {
     //发送客服消息的接口地址
     public static final String SEND_MESSAGE_URL = "https://api.weixin.qq.com/cgi-bin/message/custom/send";
 
+    //通过code来获取网页授权专用的access_token凭据
+    public static final String GET_WEB_ACCESSTOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
+
     //直接获取用户基本信息的接口
     public static final String GET_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info";
 
