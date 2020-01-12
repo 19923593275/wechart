@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 
-public class User implements Serializable {
+public class UserRsp implements Serializable {
 
     private String user_open_id;
     private String user_name;

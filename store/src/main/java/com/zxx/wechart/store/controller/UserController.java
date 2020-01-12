@@ -34,6 +34,7 @@ public class UserController {
         if(StringUtils.isEmpty(code)) {
             response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
         }
+
         return response;
     }
 
