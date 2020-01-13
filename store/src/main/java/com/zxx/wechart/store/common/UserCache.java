@@ -1,28 +1,21 @@
 package com.zxx.wechart.store.common;
 
 import java.io.Serializable;
-import java.util.Date;
 
-
-public class UserRsp implements Serializable {
+/**
+ * @Author ： 周星星
+ * @Date ： 2020/1/13 13:57
+ * @DES : 用户登陆session缓存数据
+ */
+public class UserCache implements Serializable {
 
     private String user_open_id;
     private String user_name;
     private int user_tel;
-    private Date create_date;
     private int is_follow;
     private int gengder;
     private String nick_name;
-    private String head_img;
-    private String user_token;
-
-    public String getUser_token() {
-        return user_token;
-    }
-
-    public void setUser_token(String user_token) {
-        this.user_token = user_token;
-    }
+    private String userToken;
 
     public String getUser_open_id() {
         return user_open_id;
@@ -46,14 +39,6 @@ public class UserRsp implements Serializable {
 
     public void setUser_tel(int user_tel) {
         this.user_tel = user_tel;
-    }
-
-    public Date getCreate_date() {
-        return create_date;
-    }
-
-    public void setCreate_date(Date create_date) {
-        this.create_date = create_date;
     }
 
     public int getIs_follow() {
@@ -80,26 +65,24 @@ public class UserRsp implements Serializable {
         this.nick_name = nick_name;
     }
 
-    public String getHead_img() {
-        return head_img;
+    public String getUserToken() {
+        return userToken;
     }
 
-    public void setHead_img(String head_img) {
-        this.head_img = head_img;
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 
     @Override
     public String toString() {
-        return "UserRsp{" +
+        return "UserCache{" +
                 "user_open_id='" + user_open_id + '\'' +
                 ", user_name='" + user_name + '\'' +
                 ", user_tel=" + user_tel +
-                ", create_date=" + create_date +
                 ", is_follow=" + is_follow +
                 ", gengder=" + gengder +
                 ", nick_name='" + nick_name + '\'' +
-                ", head_img='" + head_img + '\'' +
-                ", user_token='" + user_token + '\'' +
+                ", userToken='" + userToken + '\'' +
                 '}';
     }
 }

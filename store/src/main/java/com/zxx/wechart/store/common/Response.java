@@ -68,6 +68,17 @@ public class Response implements Serializable {
         return response;
     }
 
+    public static Response error(CodeConstant codeConstant, String message) {
+        Response response = new Response();
+        response.setStateCode(codeConstant.getValue());
+        if (StringUtils.isEmpty(message)) {
+            response.setMessage(codeConstant.getMessage());
+        } else {
+            response.setMessage(message);
+        }
+        return response;
+    }
+
     public void updateErrMsgFromCode(){
         this.message = CodeConstant.valueOf(this.stateCode).getMessage();
     }

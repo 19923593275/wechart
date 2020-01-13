@@ -2,13 +2,19 @@ package com.zxx.wechart.store.controller;
 
 import com.zxx.wechart.store.common.CodeConstant;
 import com.zxx.wechart.store.common.Response;
+import com.zxx.wechart.store.common.UserCache;
+import com.zxx.wechart.store.common.UserRsp;
 import com.zxx.wechart.store.config.WechatConfig;
 import com.zxx.wechart.store.queue.QRCodeQueue;
+import com.zxx.wechart.store.service.UserService;
 import com.zxx.wechart.store.utils.MenuUtil;
 import com.zxx.wechart.store.utils.MessageUtil;
 import com.zxx.wechart.store.utils.SignUtil;
 import com.zxx.wechart.store.utils.XMLUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,15 +32,25 @@ public class UserController {
 
     private SignUtil signUtil;
 
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Response login(HttpServletRequest request, Map<String, String> params) {
         Response response = null;
-        String code = params.get("code");
-        if(StringUtils.isEmpty(code)) {
+        try{
+            String code = params.get("code");
+            if(StringUtils.isEmpty(code)) {
+                response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
+            }
+            UserRsp userRsp = userService.login(request, code);
+            response = Response.success(userRsp);
+        }catch (Exception e) {
+            logger.error("用户登陆失败 err", e);
             response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
         }
-
         return response;
     }
 
