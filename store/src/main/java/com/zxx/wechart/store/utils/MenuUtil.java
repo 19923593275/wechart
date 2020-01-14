@@ -19,7 +19,7 @@ public class MenuUtil {
     //折扣专场，跳到京东
     private static final String BUY = "https://h5.m.jd.com/pc/dev/2QurYgV498yahfXFcbmXeNuQpCyQ/index.html?unionActId=31067&d=CoY67X&s=&cu=true&utm_source=home.firefoxchina.cn&utm_medium=tuiguang&utm_campaign=t_220520384_&utm_term=8a904ba935904ef1b59178369b0faca7";
     //我的订单URL，跳向当前项目中的页面
-    private static final String ORDER = "http://sc2ess.natappfree.cc/home.html";
+    private static final String MINEN = "http://www.zxx9527.cn/about";
 
     public static void createMenu() {
         String paramStr = "{\n" +
@@ -45,24 +45,11 @@ public class MenuUtil {
                 "      ]\n" +
                 "    },\n" +
                 "    {\n" +
-                "      \"name\":\"更多服务\",\n" +
-                "      \"sub_button\":[\n" +
                 "        {\n" +
                 "          \"type\":\"view\",\n" +
-                "          \"name\":\"我的订单\",\n" +
-                "          \"url\":\""+ORDER+"\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"type\":\"click\",\n" +
-                "          \"name\":\"生成海报\",\n" +
-                "          \"key\":\"CREATE_POSTER\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"type\":\"view\",\n" +
-                "          \"name\":\"折扣专场\",\n" +
-                "          \"url\":\""+BUY+"\"\n" +
+                "          \"name\":\"我的\",\n" +
+                "          \"url\":\""+MINEN+"\"\n" +
                 "        }\n" +
-                "      ]\n" +
                 "    }\n" +
                 "  ]\n" +
                 "}";
