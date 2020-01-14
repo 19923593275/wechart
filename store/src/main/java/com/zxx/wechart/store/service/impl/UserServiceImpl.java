@@ -1,5 +1,6 @@
 package com.zxx.wechart.store.service.impl;
 
+import com.zxx.wechart.store.common.ServiceException;
 import com.zxx.wechart.store.common.UserCache;
 import com.zxx.wechart.store.common.UserRsp;
 import com.zxx.wechart.store.service.UserService;
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService{
     private UserUtil userUtil;
 
     @Override
-    public UserRsp login(HttpServletRequest request, String code) {
+    public UserRsp login(HttpServletRequest request, String code) throws ServiceException {
         HttpSession session = request.getSession(false);
         if (session != null) {
             UserCache userCache = userUtil.getUserInfoBySession(session);

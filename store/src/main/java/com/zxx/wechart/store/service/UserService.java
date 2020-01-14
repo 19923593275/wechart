@@ -1,5 +1,6 @@
 package com.zxx.wechart.store.service;
 
+import com.zxx.wechart.store.common.ServiceException;
 import com.zxx.wechart.store.common.UserRsp;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +12,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface UserService {
 
-    UserRsp login(HttpServletRequest request, String code);
+    UserRsp login(HttpServletRequest request, String code) throws ServiceException;
 
 }

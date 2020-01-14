@@ -50,11 +50,11 @@ public class WechatConfig {
     public static final String GET_WEB_ACCESSTOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
 
     //直接获取用户基本信息的接口
-    public static final String GET_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info";
+    public static final String GET_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
 
     //通过code换取网页授权access_token的接口地址
-    public static final String GET_USER_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+WechatConfig.APPID+"&secret="+WechatConfig.SECRET+"&code={code}&grant_type=authorization_code";
+    public static final String GET_USER_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+WechatConfig.APPID+"&secret="+WechatConfig.SECRET+"&code=CODE&grant_type=authorization_code";
 
     //根据网页授权access_token和openid换取用户信息的接口地址
-    public static final String GET_CODE_INFO_URL = "https://api.weixin.qq.com/sns/userinfo";
+    public static final String GET_CODE_INFO_URL = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
 }
