@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.zxx.wechart.store.config.WechatConfig;
 import com.zxx.wechart.store.config.WechatUserInfo;
 import com.zxx.wechart.store.config.WechatUserToken;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,7 @@ public class WechatUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(WechatUtil.class);
 
-    public WechatUserToken getOpenIdByCode(String code){
+    public static WechatUserToken getOpenIdByCode(String code){
         WechatUserToken wechatUserToken = new WechatUserToken();
         try{
             String wechatResponse = null;
@@ -40,7 +41,7 @@ public class WechatUtil {
         }
     }
 
-    public WechatUserInfo getUserInfoByOpenId(String userToken, String openId){
+    public static WechatUserInfo getUserInfoByOpenId(String userToken, String openId){
         WechatUserInfo wechatUserInfo = new WechatUserInfo();
         try{
             String wechatResponse = null;
@@ -58,11 +59,42 @@ public class WechatUtil {
             wechatUserInfo.setNickName(jsonObject.getString("nickname"));
             wechatUserInfo.setOpenId(jsonObject.getString("openid"));
 //            wechatUserInfo.setPrivilege(jsonObject.getJSONArray());
-            wechatUserInfo.setSex(jsonObject.getString("sex"));
+            wechatUserInfo.setSex(jsonObject.getInteger("sex"));
             wechatUserInfo.setUnionid(jsonObject.getString("unionid"));
             return wechatUserInfo;
         } catch (Exception e) {
             logger.error("getUserInfoByOpenId error", e);
+            return null;
+        }
+    }
+
+    public static WechatUserInfo getBasicUserInfoByOpenId(String openId) {
+        WechatUserInfo wechatUserInfo = new WechatUserInfo();
+        try {
+            String wechatResponse = null;
+            String url = WechatConfig.GET_BASIC_INFO_URL;
+            if (StringUtils.isEmpty(WechatConfig.getToken())) {
+                logger.info("WechatUserInfo WechatConfig.getToken为空");
+                return null;
+            }
+            url = url.replace("ACCESS_TOKEN", WechatConfig.getToken());
+            url = url.replace("OPENID", openId);
+            wechatResponse = HttpUtil.httpGet(url);
+            JSONObject jsonObject = JSON.parseObject(wechatResponse);
+            if (jsonObject == null) {
+                return null;
+            }
+            wechatUserInfo.setSex(jsonObject.getInteger("sex"));
+            wechatUserInfo.setOpenId(jsonObject.getString("openid"));
+            wechatUserInfo.setNickName(jsonObject.getString("nickname"));
+            wechatUserInfo.setHeadimgurl(jsonObject.getString("headimgurl"));
+            wechatUserInfo.setCountry(jsonObject.getString("country"));
+            wechatUserInfo.setCity(jsonObject.getString("city"));
+            wechatUserInfo.setProvince(jsonObject.getString("province"));
+            wechatUserInfo.setSubscribe(jsonObject.getInteger("subscribe"));
+            return wechatUserInfo;
+        }catch (Exception e) {
+            logger.error("getBasicUserInfoByOpenId error", e);
             return null;
         }
     }

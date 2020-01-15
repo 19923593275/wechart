@@ -1,9 +1,6 @@
 package com.zxx.wechart.store.controller;
 
-import com.zxx.wechart.store.common.CodeConstant;
-import com.zxx.wechart.store.common.Response;
-import com.zxx.wechart.store.common.UserCache;
-import com.zxx.wechart.store.common.UserRsp;
+import com.zxx.wechart.store.common.*;
 import com.zxx.wechart.store.config.WechatConfig;
 import com.zxx.wechart.store.queue.QRCodeQueue;
 import com.zxx.wechart.store.service.UserService;
@@ -47,8 +44,11 @@ public class UserController {
             }
             UserRsp userRsp = userService.login(request, code);
             response = Response.success(userRsp);
+        }catch (ServiceException e){
+            logger.error("UserController.login 用户登陆失败 ServiceException", e);
+            response = e.toResponse();
         }catch (Exception e) {
-            logger.error("用户登陆失败 err", e);
+            logger.error("UserController.login 用户登陆失败 Exception", e);
             response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
         }
         return response;

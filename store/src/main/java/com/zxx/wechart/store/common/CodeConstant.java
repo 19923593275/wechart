@@ -15,7 +15,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public enum  CodeConstant {
     SUUC_CODE(0,"成功"),
 
-    WECHART_INIT_ERR(10001, "业务暂停受理");
+    WECHART_INIT_ERR(10001, "业务暂停受理"),
+
+    WECHAT_USER_TOKEN_NULL(20001, "获取用户token失败"),
+    WECHAT_USER_OPENID_NULL(20002, "用户openId为空"),
+    WECHAT_USER_INFO_NULL(20003, "获取用户信息失败");
+
 
     /**
      * 值
