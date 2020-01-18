@@ -9,14 +9,12 @@ import com.zxx.wechart.store.config.WechatUserToken;
 import com.zxx.wechart.store.domain.user.User;
 import com.zxx.wechart.store.mapper.UserMapper;
 import com.zxx.wechart.store.service.UserService;
-import com.zxx.wechart.store.utils.HttpUtil;
 import com.zxx.wechart.store.utils.UserUtil;
 import com.zxx.wechart.store.utils.WechatUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,7 +55,6 @@ public class UserServiceImpl implements UserService{
             throw new ServiceException(CodeConstant.WECHAT_USER_OPENID_NULL);
         }
         User user = this.queryUserInfoByoenId(openId);
-        //TODO 通过openid获取用户信息
         WechatUserInfo wechatUserInfo = WechatUtil.getBasicUserInfoByOpenId(openId);
         if (wechatUserInfo == null) {
             throw new ServiceException(CodeConstant.WECHAT_USER_INFO_NULL);
@@ -78,6 +75,7 @@ public class UserServiceImpl implements UserService{
             userCache.setUserToken(userRsp.getUser_token());
             UserUtil.saveUserSession(session, userCache);
         }
+        logger.info("userRsp =========" + userRsp);
         return userRsp;
     }
 
@@ -85,6 +83,7 @@ public class UserServiceImpl implements UserService{
         User user = null;
         try {
             user = userMapper.queryUserInfoByOpenId(openId);
+            logger.info("queryUserInfoByoenId user ============ " + user);
         }catch (Exception e) {
             logger.error("queryUserInfoByoenId err", e);
         }
@@ -123,6 +122,7 @@ public class UserServiceImpl implements UserService{
                 userRsp.setCreate_date(user.getCreate_date());
                 userRsp.setGengder(gender);
                 userMapper.updateUserInfo(openId, nickName, headImg, gender, isfllow);
+                logger.info("修改用户成功");
             }
         } catch (Exception e) {
             userRsp = null;

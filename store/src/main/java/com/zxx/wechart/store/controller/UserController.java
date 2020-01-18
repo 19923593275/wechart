@@ -55,6 +55,7 @@ public class UserController {
             logger.error("UserController.login 用户登陆失败 Exception", e);
             response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
         }
+        logger.info("login return stateCode = "+ response.getStateCode() +",data = " + response.getData() );
         return response;
     }
 
