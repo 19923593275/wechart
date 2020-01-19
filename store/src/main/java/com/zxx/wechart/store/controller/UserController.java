@@ -12,10 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,6 +53,12 @@ public class UserController {
             response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
         }
         logger.info("login return stateCode = "+ response.getStateCode() +",data = " + response.getData() );
+        return response;
+    }
+    @RequestMapping(value = "/login/test", method = RequestMethod.POST)
+    public Response login(HttpServletRequest request, @RequestBody String code) {
+        System.out.println("code :====="+code);
+        Response response = Response.success(code);
         return response;
     }
 

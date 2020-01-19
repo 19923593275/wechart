@@ -42,7 +42,11 @@ public class UserServiceImpl implements UserService{
         HttpSession session = request.getSession(false);
         if (session != null) {
             UserCache userCache = userUtil.getUserInfoBySession(session);
-            logger.info(userCache.getUser_open_id() + "login sesson invalidate");
+            if (userCache != null) {
+                logger.info(userCache.getUser_open_id() + "login sesson invalidate");
+            } else {
+                logger.info("login sesson userCache null");
+            }
             session.invalidate();
         }
         session = request.getSession();
