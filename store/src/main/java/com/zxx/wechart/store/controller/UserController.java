@@ -4,10 +4,7 @@ import com.zxx.wechart.store.common.*;
 import com.zxx.wechart.store.config.WechatConfig;
 import com.zxx.wechart.store.queue.QRCodeQueue;
 import com.zxx.wechart.store.service.UserService;
-import com.zxx.wechart.store.utils.MenuUtil;
-import com.zxx.wechart.store.utils.MessageUtil;
-import com.zxx.wechart.store.utils.SignUtil;
-import com.zxx.wechart.store.utils.XMLUtil;
+import com.zxx.wechart.store.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +28,9 @@ public class UserController {
     private static final long serialVersionUID = 1L;
 
     private SignUtil signUtil;
+
+    @Autowired
+    private CheckUserUtil checkUserUtil;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -56,6 +56,77 @@ public class UserController {
             response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
         }
         logger.info("login return stateCode = "+ response.getStateCode() +",data = " + response.getData() );
+        return response;
+    }
+
+    /**
+     * 发送验证码
+     * @param request
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "/send-code", method = RequestMethod.POST)
+    public Response sendCode(HttpServletRequest request, @RequestBody Map<String, String> params) {
+        Response response = null;
+        try{
+            String serviceType = params.get("serviceType");
+            if(StringUtils.isEmpty(serviceType)) {
+                response = Response.error(CodeConstant.WECHART_BUSITYPE_NULL.getValue(), CodeConstant.WECHART_BUSITYPE_NULL.getMessage());
+                return response;
+            }
+            String code = userService.sendCode(request, serviceType);
+            if (code == null) {
+                return Response.error(CodeConstant.WECHART_CODE_ERR.getValue(), CodeConstant.WECHART_CODE_ERR.getMessage());
+            }
+            response = Response.success(code);
+        }catch (ServiceException e){
+            logger.error("UserController.sendCode 验证码发送失败 ServiceException", e);
+            response = e.toResponse();
+        }catch (Exception e) {
+            logger.error("UserController.sendCode 验证码发送失败 Exception", e);
+            response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
+        }
+        return response;
+    }
+
+    @RequestMapping(value = "/bind-phone", method = RequestMethod.POST)
+    public Response bindPhone(HttpServletRequest request, @RequestBody Map<String, String> params) {
+        Response response = null;
+        try{
+            response = checkUserUtil.checkUser(request, false);
+            int userRet = response.getStateCode();
+            if (userRet != 0) {
+                return Response.error(response.getStateCode(), response.getMessage());
+            }
+            UserCache userCache = (UserCache) response.getData();
+            String serviceType = params.get("serviceType");
+            String phone = params.get("phone");
+            String code = params.get("code");
+            if (StringUtils.isEmpty(phone)) {
+                response = Response.error(CodeConstant.WECHAT_BIND_PHONE_NULL.getValue(), CodeConstant.WECHAT_BIND_PHONE_NULL.getMessage());
+                return response;
+            }
+            if (StringUtils.isEmpty(code)) {
+                response = Response.error(CodeConstant.WECHAT_BIND_CODE_NULL.getValue(), CodeConstant.WECHAT_BIND_CODE_NULL.getMessage());
+                return response;
+            }
+            if (StringUtils.isEmpty(serviceType)) {
+                response = Response.error(CodeConstant.WECHART_BUSITYPE_NULL.getValue(), CodeConstant.WECHART_BUSITYPE_NULL.getMessage());
+                return response;
+            }
+            Response phoneNum = userService.bindPhone(request, userCache, phone, code, serviceType);
+            System.err.println("phoneNum ========== " + phoneNum.getStateCode() + phoneNum.getData() + phoneNum.getMessage());
+            if (phoneNum.getStateCode() != 0) {
+                return phoneNum;
+            }
+            response = Response.success(phoneNum.getData());
+        }catch (ServiceException e){
+            logger.error("UserController.bindPhone 绑定手机号码失败 ServiceException", e);
+            response = e.toResponse();
+        }catch (Exception e) {
+            logger.error("UserController.bindPhone 绑定手机号码失败 Exception", e);
+            response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
+        }
         return response;
     }
 
@@ -166,5 +237,8 @@ public class UserController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:hh:ss");
         String str = sdf.format(new Date());
         System.err.println("ddd "+ str);
+        String phone = "19923593275";
+        int a = Integer.parseInt(phone);
+        System.err.println("num "+ a);
     }
 }

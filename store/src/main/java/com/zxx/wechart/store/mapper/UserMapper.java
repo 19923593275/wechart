@@ -25,4 +25,7 @@ public interface UserMapper {
 
     @Update("update wechat_user set nick_name = #{nickName},head_img = #{headImg},gender = #{gender},is_follow = #{isfllow} where user_open_id = #{openId}")
     void updateUserInfo(@Param("openId") String openId, @Param("nickName") String nickName, @Param("headImg") String headImg, @Param("gender") int gender, @Param("isfllow") int isfllow);
+
+    @Update("update wechat_user set user_tel = #{phone} where user_open_id = #{openId}")
+    void bindPhone(@Param("openId") String openId, @Param("phone") String phone);
 }

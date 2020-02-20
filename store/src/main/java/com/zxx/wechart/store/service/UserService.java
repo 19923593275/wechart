@@ -1,6 +1,8 @@
 package com.zxx.wechart.store.service;
 
+import com.zxx.wechart.store.common.Response;
 import com.zxx.wechart.store.common.ServiceException;
+import com.zxx.wechart.store.common.UserCache;
 import com.zxx.wechart.store.common.UserRsp;
 import com.zxx.wechart.store.domain.user.User;
 
@@ -22,4 +24,7 @@ public interface UserService {
      */
     UserRsp login(HttpServletRequest request, String code) throws ServiceException;
 
+    String sendCode(HttpServletRequest request, String serviceType) throws ServiceException;
+
+    Response bindPhone(HttpServletRequest request, UserCache userCache, String phone, String code, String serviceType) throws ServiceException;
 }

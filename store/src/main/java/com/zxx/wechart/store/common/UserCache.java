@@ -11,7 +11,7 @@ public class UserCache implements Serializable {
 
     private String user_open_id;
     private String user_name;
-    private int user_tel;
+    private String user_tel;
     private int is_follow;
     private int gengder;
     private String nick_name;
@@ -33,11 +33,11 @@ public class UserCache implements Serializable {
         this.user_name = user_name;
     }
 
-    public int getUser_tel() {
+    public String getUser_tel() {
         return user_tel;
     }
 
-    public void setUser_tel(int user_tel) {
+    public void setUser_tel(String user_tel) {
         this.user_tel = user_tel;
     }
 

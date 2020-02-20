@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS `wechat_user`;
 CREATE TABLE `wechat_user` (
   `user_open_id` varchar(28) NOT NULL COMMENT '用户openid',
   `user_name` varchar(10) DEFAULT NULL COMMENT '用户实名姓名',
-  `user_tel` int(11) DEFAULT NULL COMMENT '用户电话号码',
+  `user_tel` varchar(11) DEFAULT NULL COMMENT '用户电话号码',
   `create_date` date DEFAULT NULL COMMENT '用户创建时间',
   `is_follow` int(1) NOT NULL DEFAULT '0' COMMENT '用户是否关注0未关注 1关注',
   `follow_date` date DEFAULT NULL COMMENT '用户关注时间',

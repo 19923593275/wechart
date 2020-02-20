@@ -60,6 +60,7 @@ public class Response implements Serializable {
 
     public static Response error(int stateCode, String message) {
         Response response = new Response();
+        response.setStateCode(stateCode);
         if (StringUtils.isEmpty(message)) {
             response.updateErrMsgFromCode();
         } else {
