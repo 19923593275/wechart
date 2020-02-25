@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.zxx.wechart</groupId>
 	<artifactId>store</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>wechat</version>
 	<name>store</name>
 	<description>zxx的一个微信公众号开发</description>
 
