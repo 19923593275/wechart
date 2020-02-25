@@ -10,6 +10,17 @@ public class WechatConfig {
     //获取到的凭证
     public static volatile String token;
 
+    //jssdk ticket
+    public static volatile String ticket;
+
+    public static String getTicket() {
+        return ticket;
+    }
+
+    public static void setTicket(String ticket) {
+        WechatConfig.ticket = ticket;
+    }
+
     public static String getToken() {
         return token;
     }
@@ -56,4 +67,7 @@ public class WechatConfig {
 
     //根据网页授权access_token和openid换取用户信息的接口地址
     public static final String GET_CODE_INFO_URL = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
+
+    //获取jsapi_ticket,用于生成JS-SDK权限验证的签名了
+    public static final String GET_JS_SDK_TICKET_URL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi";
 }

@@ -19,6 +19,7 @@ public enum  CodeConstant {
     WECHART_BUSITYPE_NULL(10002, "业务类型为空"),
     WECHART_LOGIN_OUT(10003, "用户未登录"),
     WECHART_CODE_ERR(10004, "生成验证码失败"),
+    WECHAET_CONFIG_URL_NULL(10005, "url为空"),
 
     WECHAT_USER_TOKEN_NULL(20001, "获取用户token失败"),
     WECHAT_USER_OPENID_NULL(20002, "用户openId为空"),

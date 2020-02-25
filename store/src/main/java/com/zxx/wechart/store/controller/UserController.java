@@ -130,6 +130,24 @@ public class UserController {
         return response;
     }
 
+    @RequestMapping(value = "get-wxconfig", method = RequestMethod.POST)
+    public Response getWxConfig(HttpServletRequest request, @RequestBody Map<String, String> params) {
+        Response response = null;
+        try {
+            String url = params.get("url");
+            if (StringUtils.isEmpty(url)) {
+                logger.info("UserController.getWxConfig url参数为空");
+                response = Response.error(CodeConstant.WECHAET_CONFIG_URL_NULL.getValue(), CodeConstant.WECHAET_CONFIG_URL_NULL.getMessage());
+                return response;
+            }
+            response = signUtil.signJssdk(url);
+        } catch (Exception e) {
+            logger.error("UserController.getWxConfig 验证JSSKD失败 Exception", e);
+            response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
+        }
+        return response;
+    }
+
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String test(HttpServletRequest request) {
         return "你好! 我是周星星!";

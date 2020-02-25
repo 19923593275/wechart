@@ -82,6 +82,7 @@ public class WechatUtil {
             url = url.replace("ACCESS_TOKEN", WechatConfig.getToken());
             url = url.replace("OPENID", openId);
             wechatResponse = HttpUtil.httpGet(url);
+            logger.info("getBasicUserInfoByOpenId result ==== " + wechatResponse);
             JSONObject jsonObject = JSON.parseObject(wechatResponse);
             if (jsonObject == null) {
                 return null;
