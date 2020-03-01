@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//com.order.test.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxx.wechart.store.mapper.AboutMapper">
+    <resultMap id="musicMap" type="musicMap">
+        <id property="music_id" column="music_id"/>
+        <result property="music_name" column="music_name"/>
+        <result property="music_url" column="music_url"/>
+        <result property="music_lyric_url" column="music_lyric_url"/>
+        <result property="singer" column="singer"/>
+        <result property="singer_img_url" column="singer_img_url"/>
+        <result property="is_chosen" column="is_chosen"/>
+        <result property="like_sum" column="like_sum"/>
+        <result property="comment_sum" column="comment_sum"/>
+    </resultMap>
+
+    <select id="getPhbMusic" resultMap="musicMap">
+        select t.*,ifnull(s.comment_sum, 0) as comment_sum from (
+            select a.music_id, a.music_name, a.music_url, a.music_lyric_url, a.singer, a.singer_img_url, a.is_chosen, ifnull(b.like_sum, 0) as like_sum from wechat_music as a left join(
+            select music_id,count(music_id) as like_sum from wechat_user_like_music group by music_id) as b  on a.music_id = b.music_id) as t
+            left join (select music_id,count(music_id) as comment_sum from wechat_user_comment_music group by music_id) as s on t.music_id = s.music_id
+            order by like_sum desc
+    </select>
+
+    <resultMap id="enjoyMusicMap" type="enjoyMusicMap">
+        <id property="music_id" column="music_id"/>
+        <result property="user_open_id" column="user_open_id"/>
+        <result property="create_date" column="create_date"/>
+    </resultMap>
+
+    <select id="getEnJoyMusicByOpenId" resultMap="enjoyMusicMap">
+        select * from wechat_user_like_music where user_open_id = #{openId} order by create_date desc
+    </select>
+</mapper>

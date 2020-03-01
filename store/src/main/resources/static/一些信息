@@ -36,10 +36,10 @@ DROP TABLE IF EXISTS `wechat_music`;
 CREATE TABLE `wechat_music` (
   `music_id` int(4) NOT NULL AUTO_INCREMENT COMMENT '音乐id，主键，唯一id(自增)',
   `music_name` varchar(50) NOT NULL COMMENT '音乐名称',
-  `music_url` varchar(100) NOT NULL COMMENT '音乐地址(播放地址)',
-  `music_lyric_url` varchar(100) DEFAULT NULL COMMENT '歌词地址',
+  `music_url` varchar(250) NOT NULL COMMENT '音乐地址(播放地址)',
+  `music_lyric_url` varchar(250) DEFAULT NULL COMMENT '歌词地址',
   `singer` varchar(30) NOT NULL COMMENT '歌手名称',
-  `singer_img_url` varchar(100) NOT NULL COMMENT '歌手图片地址',
+  `singer_img_url` varchar(120) NOT NULL COMMENT '歌手图片地址',
   `is_chosen` varchar(1) NOT NULL COMMENT '是否精选歌曲(默认为0),0:否，1:是',
   `like_sum` int(4) DEFAULT '0' COMMENT '喜欢个数，默认为0，用于歌曲排行榜',
   `comment_sum` int(4) DEFAULT '0' COMMENT '评论个数，默认为0',
