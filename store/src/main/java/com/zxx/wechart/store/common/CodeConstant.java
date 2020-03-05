@@ -36,6 +36,8 @@ public enum  CodeConstant {
 
     //about相关 30001-30999
     WECHAT_MUSICID_NULL(30001, "音乐id为空"),
+    WECHAT_COMMENT_NULL(30002, "音乐评论内容为空"),
+    WECHAT_PAGE_QUERY_ERR(30003, "分页错误,超出总页数"),
 
 
 

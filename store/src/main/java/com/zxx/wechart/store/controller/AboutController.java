@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -94,6 +95,61 @@ public class AboutController {
             response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
         }
         return response;
+    }
+
+    @RequestMapping(value = "/findPageQuery-musicComment", method = RequestMethod.POST)
+    public Response findPageQueryMusicComment(HttpServletRequest request, @RequestBody Map<String, Object> params) {
+        Response response = null;
+        try {
+            Response checkResponse = checkUserUtil.checkUser(request, false);
+            int userRet = checkResponse.getStateCode();
+            if (userRet != 0) {
+                return checkResponse;
+            }
+            UserCache userCache = (UserCache) checkResponse.getData();
+            int pageSize = (int) params.get("pageSize");
+            int indexPage = (int) params.get("indexPage");
+            int musicId = (int) params.get("musicId");
+            String openId = userCache.getUser_open_id();
+            response = aboutService.findPageQueryMusicComment(openId, musicId, indexPage, pageSize);
+        } catch (ServiceException e) {
+            logger.error("AboutController.findPageQueryMusicComment 分页查询音乐评论失败 ServiceException", e);
+            response = e.toResponse();
+        } catch (Exception err) {
+            logger.error("AboutController.findPageQueryMusicComment 分页查询音乐评论失败 err", err);
+            response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
+        }
+        return response;
+    }
+
+    @RequestMapping(value = "/add-musicComment", method = RequestMethod.POST)
+    public Response addMusicComment(HttpServletRequest request, @RequestBody Map<String, String> params) {
+        Response response = null;
+        try {
+            Response checkResponse = checkUserUtil.checkUser(request, false);
+            int userRet = checkResponse.getStateCode();
+            if (userRet != 0) {
+                return checkResponse;
+            }
+            UserCache userCache = (UserCache) checkResponse.getData();
+            String openId = userCache.getUser_open_id();
+            String musicId = params.get("musicId");
+            String content = params.get("content");
+            response = aboutService.addMusicComment(openId, musicId, content);
+        } catch (ServiceException e) {
+            logger.error("AboutController.addMusicComment 新增音乐评论失败 ServiceException", e);
+            response = e.toResponse();
+        } catch (Exception err) {
+            logger.error("AboutController.addMusicComment 新增音乐评论失败 err", err);
+            response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
+        }
+        return response;
+    }
+
+    public static void main(String[] args) {
+        int tot = (int) Math.ceil(1/5);
+        System.err.println(tot);
+        System.err.println(new Date());
     }
 
 }

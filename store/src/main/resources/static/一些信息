@@ -56,7 +56,8 @@ CREATE TABLE `wechat_user_comment_music` (
   `music_id` int(4) NOT NULL COMMENT '音乐id',
   `create_date` date NOT NULL COMMENT '创建时间',
   `content` varchar(500) NOT NULL COMMENT '评论内容',
-  `laud_sum` int(4) DEFAULT '0' COMMENT '评论点赞个数(预留功能，用户可以对评论点赞)'
+  `laud_sum` int(4) DEFAULT '0' COMMENT '评论点赞个数(预留功能，用户可以对评论点赞)',
+  PRIMARY KEY (`comment_id`,`user_open_id`,`music_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------

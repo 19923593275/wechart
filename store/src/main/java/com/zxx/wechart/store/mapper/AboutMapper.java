@@ -1,5 +1,6 @@
 package com.zxx.wechart.store.mapper;
 
+import com.zxx.wechart.store.domain.about.CommentMusic;
 import com.zxx.wechart.store.domain.about.EnjoyMusic;
 import com.zxx.wechart.store.domain.about.Music;
 import org.apache.ibatis.annotations.*;
@@ -29,4 +30,9 @@ public interface AboutMapper {
 
     @Delete("delete from wechat_user_like_music where user_open_id = #{openId} and music_id = #{musicId}")
     void cancleEnjoyMusic(@Param("openId") String openId, @Param("musicId") String musicId);
+
+    @Insert("insert into wechat_user_comment_music (comment_id, user_open_id, music_id, create_date, content) values(#{commentId}, #{openId}, #{musicId}, #{createDate, jdbcType=TIMESTAMP}, #{content})")
+    void addMusicComment(@Param("commentId") String commentId, @Param("openId") String openId, @Param("musicId") String musicId, @Param("createDate") Date createDate, @Param("content") String content);
+
+    List<CommentMusic> findPageQueryMusicComment(@Param("musicId") int musicId);
 }

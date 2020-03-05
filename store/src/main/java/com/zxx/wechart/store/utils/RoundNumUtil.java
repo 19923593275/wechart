@@ -1,5 +1,7 @@
 package com.zxx.wechart.store.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Random;
 
 /**
@@ -7,6 +9,7 @@ import java.util.Random;
  * @DateTime: 2020/2/19 0019 15:14
  * @Description: 产生随机数
  */
+@Component
 public class RoundNumUtil {
 
     /**

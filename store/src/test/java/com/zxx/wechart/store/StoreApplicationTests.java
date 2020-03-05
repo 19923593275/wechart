@@ -99,6 +99,19 @@ class StoreApplicationTests {
 	}
 
 	@Test
+	public void testQueryComment() {
+		Response response = null;
+		try {
+			response = aboutService.findPageQueryMusicComment("", 17, 1, 5);
+		} catch (ServiceException e1) {
+			response = e1.toResponse();
+		} catch (Exception e) {
+			response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
+		}
+		System.err.println("result " + response.getStateCode() + "," + response.getMessage());
+	}
+
+	@Test
 	public void testListFilter() {
 		List<EnjoyMusic> enjoyList = new ArrayList<>();
 		EnjoyMusic enjoyMusic1 = new EnjoyMusic();

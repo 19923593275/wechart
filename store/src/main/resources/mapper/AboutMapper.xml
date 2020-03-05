@@ -31,4 +31,20 @@
     <select id="getEnJoyMusicByOpenId" resultMap="enjoyMusicMap">
         select * from wechat_user_like_music where user_open_id = #{openId} order by create_date desc
     </select>
+
+    <resultMap id="commentMusicMap" type="commentMusicMap">
+        <id property="comment_id" column="comment_id"/>
+        <result property="user_open_id" column="user_open_id"/>
+        <result property="music_id" column="music_id"/>
+        <result property="create_date" column="create_date"/>
+        <result property="content" column="content"/>
+        <result property="laud_sum" column="laud_sum"/>
+        <result property="nick_name" column="nick_name"/>
+        <result property="head_img" column="head_img"/>
+    </resultMap>
+
+    <select id="findPageQueryMusicComment" resultMap="commentMusicMap">
+        select a.*,b.nick_name,b.head_img from (select * from wechat_user_comment_music where music_id = #{musicId}) as a inner join (
+            select * from wechat_user) as b on a.user_open_id = b.user_open_id order by create_date desc;
+    </select>
 </mapper>

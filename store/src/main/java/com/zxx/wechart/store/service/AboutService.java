@@ -15,4 +15,8 @@ public interface AboutService {
     Response addEnjoyMusic(String openId, String musicId) throws ServiceException;
 
     Response cancelEnjoyMusic(String openId, String musicId) throws ServiceException;
+
+    Response findPageQueryMusicComment(String openId, int musicId, int indexPage, int pageSize) throws ServiceException;
+
+    Response addMusicComment(String openId, String musicId, String content) throws ServiceException;
 }

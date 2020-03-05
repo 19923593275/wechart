@@ -3,10 +3,12 @@ package com.zxx.wechart.store.service.impl;
 import com.zxx.wechart.store.common.CodeConstant;
 import com.zxx.wechart.store.common.Response;
 import com.zxx.wechart.store.common.ServiceException;
+import com.zxx.wechart.store.domain.about.CommentMusic;
 import com.zxx.wechart.store.domain.about.EnjoyMusic;
 import com.zxx.wechart.store.domain.about.Music;
 import com.zxx.wechart.store.mapper.AboutMapper;
 import com.zxx.wechart.store.service.AboutService;
+import com.zxx.wechart.store.utils.RoundNumUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,9 @@ public class AboutServiceImpl implements AboutService {
 
     @Autowired
     private AboutMapper aboutMapper;
+
+    @Autowired
+    private RoundNumUtil roundNumUtil;
 
     @Override
     public Response getAllMusic(String openId) throws ServiceException {
@@ -119,6 +124,61 @@ public class AboutServiceImpl implements AboutService {
             response = Response.success();
         } catch (Exception e) {
             logger.error("AboutServiceIpml.cancelEnjoyMusic 取消喜欢音乐异常", e);
+            response = Response.error(CodeConstant.WECHART_SQL_ERR.getValue(), CodeConstant.WECHART_SQL_ERR.getMessage());
+        }
+        return response;
+    }
+
+    @Override
+    public Response findPageQueryMusicComment(String openId, int musicId, int indexPage, int pageSize) throws ServiceException {
+        Response response = null;
+        Map<String, Object> result = new HashMap<>();
+        try {
+            if (StringUtils.isEmpty(musicId + "")) {
+                throw new ServiceException(CodeConstant.WECHAT_MUSICID_NULL, CodeConstant.WECHAT_MUSICID_NULL.getMessage());
+            }
+            int totalPage = 1;
+            List<CommentMusic> list = aboutMapper.findPageQueryMusicComment(musicId);
+            List<CommentMusic> newList = new ArrayList<CommentMusic>();
+            if (list.size() > 0) {
+                totalPage = list.size() % pageSize == 0 ? list.size() / pageSize : (list.size() / pageSize) + 1;
+                System.err.println("totalPage = " + totalPage + ",indexPage == " + indexPage);
+                if (indexPage < totalPage) {
+                    newList = list.subList((indexPage-1) * pageSize, indexPage * pageSize);
+                } else if (indexPage == totalPage) {
+                    newList = list.subList((indexPage-1) * pageSize, list.size());
+                } else {
+                    throw new ServiceException(CodeConstant.WECHAT_PAGE_QUERY_ERR, CodeConstant.WECHAT_PAGE_QUERY_ERR.getMessage());
+                }
+            }
+            result.put("indexPage", indexPage);
+            result.put("pageSize", pageSize);
+            result.put("totalPage", totalPage);
+            result.put("list", newList);
+            response = Response.success(result);
+        } catch (Exception e) {
+            logger.error("AboutServiceIpml.findPageQueryMusicComment 分页查询音乐评论异常", e);
+            response = Response.error(CodeConstant.WECHART_SQL_ERR.getValue(), CodeConstant.WECHART_SQL_ERR.getMessage());
+        }
+        return response;
+    }
+
+    @Override
+    public Response addMusicComment(String openId, String musicId, String content) throws ServiceException {
+        Response response = null;
+        try {
+            if (StringUtils.isEmpty(musicId + "")) {
+                throw new ServiceException(CodeConstant.WECHAT_MUSICID_NULL, CodeConstant.WECHAT_MUSICID_NULL.getMessage());
+            }
+            if (StringUtils.isEmpty(content)) {
+                throw new ServiceException(CodeConstant.WECHAT_COMMENT_NULL, CodeConstant.WECHAT_COMMENT_NULL.getMessage());
+            }
+            String commentId = roundNumUtil.createNumCode(16);
+            Date createDate = new Date();
+            aboutMapper.addMusicComment(commentId, openId, musicId, createDate, content);
+            response = Response.success(null);
+        } catch (Exception e) {
+            logger.error("AboutServiceIpml.addMusicComment 新增音乐评论异常", e);
             response = Response.error(CodeConstant.WECHART_SQL_ERR.getValue(), CodeConstant.WECHART_SQL_ERR.getMessage());
         }
         return response;
