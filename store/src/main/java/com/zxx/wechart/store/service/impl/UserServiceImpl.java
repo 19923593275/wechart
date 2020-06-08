@@ -1,14 +1,12 @@
 package com.zxx.wechart.store.service.impl;
 
-import com.zxx.wechart.store.common.CodeConstant;
-import com.zxx.wechart.store.common.ServiceException;
-import com.zxx.wechart.store.common.UserCache;
-import com.zxx.wechart.store.common.UserRsp;
+import com.zxx.wechart.store.common.*;
 import com.zxx.wechart.store.config.WechatUserInfo;
 import com.zxx.wechart.store.config.WechatUserToken;
 import com.zxx.wechart.store.domain.user.User;
 import com.zxx.wechart.store.mapper.UserMapper;
 import com.zxx.wechart.store.service.UserService;
+import com.zxx.wechart.store.utils.RoundNumUtil;
 import com.zxx.wechart.store.utils.UserUtil;
 import com.zxx.wechart.store.utils.WechatUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -81,6 +80,50 @@ public class UserServiceImpl implements UserService{
         }
         logger.info("userRsp =========" + userRsp);
         return userRsp;
+    }
+
+    @Override
+    public String sendCode(HttpServletRequest request, String serviceType) throws ServiceException {
+        String code = null;
+        try {
+            HttpSession session = request.getSession();
+            if (session == null) {
+                throw new ServiceException(CodeConstant.WECHART_LOGIN_OUT);
+            }
+            UserCache userCache = userUtil.getUserInfoBySession(session);
+            if(userCache == null) {
+                throw new ServiceException(CodeConstant.WECHART_LOGIN_OUT);
+            }
+            code = RoundNumUtil.roundCode();
+            userUtil.savePhoneCodeSession(session, code);
+        } catch (Exception e) {
+            code = null;
+            logger.error("生成验证码异常", e);
+        }
+        return code;
+    }
+
+    @Override
+    public Response bindPhone(HttpServletRequest request, UserCache userCache, String phone, String code, String serviceType) throws ServiceException {
+        Response response = null;
+        try {
+            HttpSession session = request.getSession();
+            String sessCode = userUtil.getPhoneCodeSession(session);
+            if (sessCode == null) {
+                response = Response.error(CodeConstant.WECHAT_BIND_CODE_OVER.getValue(), CodeConstant.WECHAT_BIND_CODE_OVER.getMessage());
+                return response;
+            }
+            if (!sessCode.equals(code)) {
+                response = Response.error(CodeConstant.WECHAT_BIND_CODE_ERR.getValue(), CodeConstant.WECHAT_BIND_CODE_ERR.getMessage());
+                return response;
+            }
+            userMapper.bindPhone(userCache.getUser_open_id(), phone);
+            response = Response.success(phone);
+        } catch (Exception e) {
+            logger.error("绑定手机号码异常", e);
+            response = Response.error(CodeConstant.WECHART_INIT_ERR.getValue(), CodeConstant.WECHART_INIT_ERR.getMessage());
+        }
+        return response;
     }
 
     public User queryUserInfoByoenId(String openId){

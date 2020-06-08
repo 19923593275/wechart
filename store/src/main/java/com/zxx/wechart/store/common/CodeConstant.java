@@ -15,12 +15,34 @@ import java.util.concurrent.ConcurrentHashMap;
 public enum  CodeConstant {
     SUUC_CODE(0,"成功"),
 
+    //系统 10001-10999
     WECHART_INIT_ERR(10001, "业务暂停受理"),
+    WECHART_BUSITYPE_NULL(10002, "业务类型为空"),
+    WECHART_LOGIN_OUT(10003, "用户未登录"),
+    WECHART_CODE_ERR(10004, "生成验证码失败"),
+    WECHAET_CONFIG_URL_NULL(10005, "url为空"),
+    WECHART_SQL_ERR(10006, "数据操作异常"),
 
+    //用户相关 20001-20999
     WECHAT_USER_TOKEN_NULL(20001, "获取用户token失败"),
     WECHAT_USER_OPENID_NULL(20002, "用户openId为空"),
-    WECHAT_USER_INFO_NULL(20003, "获取用户信息失败");
+    WECHAT_USER_INFO_NULL(20003, "获取用户信息失败"),
+    WECHAT_BIND_PHONE_NULL(20004, "手机号码为空"),
+    WECHAT_BIND_CODE_NULL(20005, "验证码为空"),
+    WECHAT_BIND_PHONE_ERR(20006, "绑定手机号码异常"),
+    WECHAT_NOT_BIND_PHONE(20007, "未绑定手机号码"),
+    WECHAT_BIND_CODE_OVER(20008, "验证码过期"),
+    WECHAT_BIND_CODE_ERR(20009, "验证码错误"),
 
+    //about相关 30001-30999
+    WECHAT_MUSICID_NULL(30001, "音乐id为空"),
+    WECHAT_COMMENT_NULL(30002, "音乐评论内容为空"),
+    WECHAT_PAGE_QUERY_ERR(30003, "分页错误,超出总页数"),
+
+
+
+
+    WECHAT_ZW_NULL(88888, "填空");
 
     /**
      * 值

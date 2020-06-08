@@ -1,7 +1,12 @@
 package com.zxx.wechart.store.utils;
 
+import com.zxx.wechart.store.common.Response;
+import com.zxx.wechart.store.config.WechatConfig;
+
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUtil {
 
@@ -20,6 +25,21 @@ public class SignUtil {
         //sha1加密
         String temp = getSha1(content.toString());
         return temp.equals(signature);
+    }
+
+    public static Response signJssdk(String url) {
+        Response response = null;
+        String noncestr = RoundNumUtil.createNumCode(16);
+        String timestamp = RoundNumUtil.createTimestamp();
+        String ticket = WechatConfig.getTicket();
+        String str1 =  "jsapi_ticket=" + ticket + "&noncestr=" + noncestr + "&timestamp=" + timestamp + "&url=" + url;
+        String signature = getSha1(str1);
+        Map<String, Object> data = new HashMap<>();
+        data.put("noncestr", noncestr);
+        data.put("timestamp", timestamp);
+        data.put("appId", WechatConfig.APPID);
+        data.put("signature", signature);
+        return Response.success(data);
     }
 
     public static String getSha1(String str){

@@ -51,6 +51,7 @@ public class HttpUtil {
             }
             client.dispatcher().executorService().shutdown();
         }
+        logger.info("httpGet url = "+ url + ",http返回结果result = " + result);
         return result;
     }
 

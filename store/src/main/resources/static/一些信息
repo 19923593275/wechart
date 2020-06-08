@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS `wechat_user`;
 CREATE TABLE `wechat_user` (
   `user_open_id` varchar(28) NOT NULL COMMENT '用户openid',
   `user_name` varchar(10) DEFAULT NULL COMMENT '用户实名姓名',
-  `user_tel` int(11) DEFAULT NULL COMMENT '用户电话号码',
+  `user_tel` varchar(11) DEFAULT NULL COMMENT '用户电话号码',
   `create_date` date DEFAULT NULL COMMENT '用户创建时间',
   `is_follow` int(1) NOT NULL DEFAULT '0' COMMENT '用户是否关注0未关注 1关注',
   `follow_date` date DEFAULT NULL COMMENT '用户关注时间',
@@ -30,5 +30,43 @@ CREATE TABLE `wechat_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of wechat_user
+-- Table structure for wechat_music
 -- ----------------------------
+DROP TABLE IF EXISTS `wechat_music`;
+CREATE TABLE `wechat_music` (
+  `music_id` int(4) NOT NULL AUTO_INCREMENT COMMENT '音乐id，主键，唯一id(自增)',
+  `music_name` varchar(50) NOT NULL COMMENT '音乐名称',
+  `music_url` varchar(250) NOT NULL COMMENT '音乐地址(播放地址)',
+  `music_lyric_url` varchar(250) DEFAULT NULL COMMENT '歌词地址',
+  `singer` varchar(30) NOT NULL COMMENT '歌手名称',
+  `singer_img_url` varchar(120) NOT NULL COMMENT '歌手图片地址',
+  `is_chosen` varchar(1) NOT NULL COMMENT '是否精选歌曲(默认为0),0:否，1:是',
+  `like_sum` int(4) DEFAULT '0' COMMENT '喜欢个数，默认为0，用于歌曲排行榜',
+  `comment_sum` int(4) DEFAULT '0' COMMENT '评论个数，默认为0',
+  PRIMARY KEY (`music_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for wechat_user_comment_music
+-- ----------------------------
+DROP TABLE IF EXISTS `wechat_user_comment_music`;
+CREATE TABLE `wechat_user_comment_music` (
+  `comment_id` varchar(28) NOT NULL COMMENT '评论id',
+  `user_open_id` varchar(28) NOT NULL COMMENT '用户id',
+  `music_id` int(4) NOT NULL COMMENT '音乐id',
+  `create_date` date NOT NULL COMMENT '创建时间',
+  `content` varchar(500) NOT NULL COMMENT '评论内容',
+  `laud_sum` int(4) DEFAULT '0' COMMENT '评论点赞个数(预留功能，用户可以对评论点赞)',
+  PRIMARY KEY (`comment_id`,`user_open_id`,`music_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for wechat_user_like_music
+-- ----------------------------
+DROP TABLE IF EXISTS `wechat_user_like_music`;
+CREATE TABLE `wechat_user_like_music` (
+  `user_open_id` varchar(28) NOT NULL COMMENT '用户id',
+  `music_id` int(4) NOT NULL COMMENT '音乐id',
+  `create_date` date NOT NULL COMMENT '用户添加时间',
+  PRIMARY KEY (`user_open_id`,`music_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
