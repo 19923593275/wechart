@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService{
             }
             session.invalidate();
         }
+        logger.info("==============清空session==============");
         session = request.getSession();
         WechatUserToken wechatUserToken = WechatUtil.getOpenIdByCode(code);
         if (wechatUserToken == null){
@@ -64,7 +65,6 @@ public class UserServiceImpl implements UserService{
         }
         UserRsp userRsp = this.addOrUpdateUser(user, wechatUserInfo);
         if (userRsp == null || userRsp.getIs_follow() != 1) {
-            session.invalidate();
             throw new ServiceException(CodeConstant.WECHAT_USER_INFO_NULL);
         } else {
             userRsp.setUser_token(wechatUserToken.getAccessToken());
