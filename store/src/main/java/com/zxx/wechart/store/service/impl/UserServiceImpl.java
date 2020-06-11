@@ -47,8 +47,8 @@ public class UserServiceImpl implements UserService{
                 logger.info("login sesson userCache null");
             }
             session.invalidate();
+            logger.info("==============清空session==============");
         }
-        logger.info("==============清空session==============");
         session = request.getSession();
         WechatUserToken wechatUserToken = WechatUtil.getOpenIdByCode(code);
         if (wechatUserToken == null){
