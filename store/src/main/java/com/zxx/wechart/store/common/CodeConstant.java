@@ -33,6 +33,7 @@ public enum  CodeConstant {
     WECHAT_NOT_BIND_PHONE(20007, "未绑定手机号码"),
     WECHAT_BIND_CODE_OVER(20008, "验证码过期"),
     WECHAT_BIND_CODE_ERR(20009, "验证码错误"),
+    WECHAT_TEST_USER_NULL(20010, "测试模式找不到当前用户"),
 
     //about相关 30001-30999
     WECHAT_MUSICID_NULL(30001, "音乐id为空"),

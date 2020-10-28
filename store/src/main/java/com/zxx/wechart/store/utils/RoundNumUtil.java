@@ -1,5 +1,6 @@
 package com.zxx.wechart.store.utils;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
@@ -11,6 +12,8 @@ import java.util.Random;
  */
 @Component
 public class RoundNumUtil {
+
+    public final static String chars = "abcdefghijklmnopqrstuvwsyzABCDEFGHIJKLMNOPQRSTUVWSYZ0123456789";
 
     /**
      * 6位验证码
@@ -57,5 +60,19 @@ public class RoundNumUtil {
 
     public static String createTimestamp() {
         return Long.toString(System.currentTimeMillis() / 1000);
+    }
+
+    /**
+     * 生成一个自定义长度的随机码
+     * @param len
+     * @return
+     */
+    public static String randonString(int len) {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < len; i++) {
+            int number = RandomUtils.nextInt(0, chars.length());
+            sb.append(chars.charAt(number));
+        }
+        return sb.toString();
     }
 }

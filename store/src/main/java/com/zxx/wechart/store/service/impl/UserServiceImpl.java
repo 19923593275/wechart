@@ -1,6 +1,7 @@
 package com.zxx.wechart.store.service.impl;
 
 import com.zxx.wechart.store.common.*;
+import com.zxx.wechart.store.config.WechatConfig;
 import com.zxx.wechart.store.config.WechatUserInfo;
 import com.zxx.wechart.store.config.WechatUserToken;
 import com.zxx.wechart.store.domain.user.User;
@@ -13,10 +14,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -36,6 +39,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserMapper userMapper;
 
+    @Value("${test.enable}")
+    private boolean isTest;
+
     @Override
     public UserRsp login(HttpServletRequest request, String code) throws ServiceException {
         HttpSession session = request.getSession(false);
@@ -50,6 +56,11 @@ public class UserServiceImpl implements UserService{
             logger.info("==============清空session==============");
         }
         session = request.getSession();
+
+        if (isTest && !StringUtils.isEmpty(request.getHeader(WechatConfig.IS_TEST_HEADER_KEY))) {
+            return passWechatAuthForTest(request, session);
+        }
+
         WechatUserToken wechatUserToken = WechatUtil.getOpenIdByCode(code);
         if (wechatUserToken == null){
             throw new ServiceException(CodeConstant.WECHAT_USER_TOKEN_NULL);
@@ -68,23 +79,55 @@ public class UserServiceImpl implements UserService{
             throw new ServiceException(CodeConstant.WECHAT_USER_INFO_NULL);
         } else {
             userRsp.setUser_token(wechatUserToken.getAccessToken());
-            UserCache userCache = new UserCache();
-            userCache.setGengder(userRsp.getGengder());
-            userCache.setIs_follow(userRsp.getIs_follow());
-            userCache.setNick_name(userRsp.getNick_name());
-            userCache.setUser_name(userRsp.getUser_name());
-            userCache.setUser_open_id(userRsp.getUser_open_id());
-            userCache.setUser_tel(userRsp.getUser_tel());
-            userCache.setUserToken(userRsp.getUser_token());
+            UserCache userCache = createUserCache(userRsp);
             UserUtil.saveUserSession(session, userCache);
         }
         logger.info("userRsp =========" + userRsp);
         return userRsp;
     }
 
+    private UserRsp passWechatAuthForTest(HttpServletRequest request, HttpSession session) throws ServiceException {
+        String userOpenId = request.getHeader(WechatConfig.IS_TEST_HEADER_KEY);
+        logger.info("openid ===== " + userOpenId);
+        User user = queryUserInfoByoenId(userOpenId);
+        if (user == null) {
+            throw new ServiceException(CodeConstant.WECHAT_TEST_USER_NULL);
+        }
+        UserRsp userRsp = createUserRspByUser(user);
+        userRsp.setUser_token(RoundNumUtil.randonString(10));
+        UserCache userCache = createUserCache(userRsp);
+        userUtil.saveUserSession(session, userCache);
+        return userRsp;
+    }
+
+    private UserCache createUserCache(UserRsp userRsp) {
+        UserCache userCache = new UserCache();
+        userCache.setGengder(userRsp.getGengder());
+        userCache.setIs_follow(userRsp.getIs_follow());
+        userCache.setNick_name(userRsp.getNick_name());
+        userCache.setUser_name(userRsp.getUser_name());
+        userCache.setUser_open_id(userRsp.getUser_open_id());
+        userCache.setUser_tel(userRsp.getUser_tel());
+        userCache.setUserToken(userRsp.getUser_token());
+        return userCache;
+    }
+
+    private UserRsp createUserRspByUser(User user) {
+        UserRsp userRsp = new UserRsp();
+        userRsp.setIs_follow(user.getIs_follow());
+        userRsp.setGengder(user.getGender());
+        userRsp.setCreate_date(user.getCreate_date());
+        userRsp.setUser_name(user.getUser_name());
+        userRsp.setHead_img(user.getHead_img());
+        userRsp.setNick_name(user.getNick_name());
+        userRsp.setUser_open_id(user.getUser_open_id());
+        userRsp.setUser_tel(user.getUser_tel());
+        return userRsp;
+    }
+
     @Override
-    public String sendCode(HttpServletRequest request, String serviceType) throws ServiceException {
-        String code = null;
+    public String sendCode(HttpServletRequest request, String serviceType) {
+        String code;
         try {
             HttpSession session = request.getSession();
             if (session == null) {
@@ -104,8 +147,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Response bindPhone(HttpServletRequest request, UserCache userCache, String phone, String code, String serviceType) throws ServiceException {
-        Response response = null;
+    public Response bindPhone(HttpServletRequest request, UserCache userCache, String phone, String code, String serviceType) {
+        Response response;
         try {
             HttpSession session = request.getSession();
             String sessCode = userUtil.getPhoneCodeSession(session);

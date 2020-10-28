@@ -20,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin
 public class UserController {
 
     private static final long serialVersionUID = 1L;

@@ -70,4 +70,6 @@ public class WechatConfig {
 
     //获取jsapi_ticket,用于生成JS-SDK权限验证的签名了
     public static final String GET_JS_SDK_TICKET_URL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi";
+
+    public static final String IS_TEST_HEADER_KEY = "IsTest";
 }
