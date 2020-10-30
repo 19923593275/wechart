@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,6 +30,7 @@ import java.util.Date;
  * @Description: User实现类
  */
 @Service("UserService")
+@Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl implements UserService{
 
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -89,6 +91,10 @@ public class UserServiceImpl implements UserService{
     private UserRsp passWechatAuthForTest(HttpServletRequest request, HttpSession session) throws ServiceException {
         String userOpenId = request.getHeader(WechatConfig.IS_TEST_HEADER_KEY);
         logger.info("openid ===== " + userOpenId);
+        if (StringUtils.isEmpty(userOpenId)) {
+            userOpenId = "okmaY1U76nDTg3r2r16ffRym4c2M";
+            logger.info("openid ===== " + userOpenId);
+        }
         User user = queryUserInfoByoenId(userOpenId);
         if (user == null) {
             throw new ServiceException(CodeConstant.WECHAT_TEST_USER_NULL);
@@ -96,6 +102,7 @@ public class UserServiceImpl implements UserService{
         UserRsp userRsp = createUserRspByUser(user);
         userRsp.setUser_token(RoundNumUtil.randonString(10));
         UserCache userCache = createUserCache(userRsp);
+        logger.info(" saveUserSession userCache = " + userCache.toString());
         userUtil.saveUserSession(session, userCache);
         return userRsp;
     }
