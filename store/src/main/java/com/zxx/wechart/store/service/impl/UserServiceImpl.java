@@ -94,6 +94,8 @@ public class UserServiceImpl implements UserService{
         if (StringUtils.isEmpty(userOpenId)) {
             userOpenId = "okmaY1U76nDTg3r2r16ffRym4c2M";
             logger.info("openid ===== " + userOpenId);
+        } else {
+            logger.info("vue 自定义 openid ===== " + userOpenId);
         }
         User user = queryUserInfoByoenId(userOpenId);
         if (user == null) {
