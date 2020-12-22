@@ -33,6 +33,7 @@ public class SignUtil {
         String timestamp = RoundNumUtil.createTimestamp();
         String ticket = WechatConfig.getTicket();
         String str1 =  "jsapi_ticket=" + ticket + "&noncestr=" + noncestr + "&timestamp=" + timestamp + "&url=" + url;
+        System.err.println("str1 = " + str1);
         String signature = getSha1(str1);
         Map<String, Object> data = new HashMap<>();
         data.put("noncestr", noncestr);
