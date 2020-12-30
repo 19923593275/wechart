@@ -11,9 +11,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -157,7 +160,7 @@ public class UserController {
         return "你好! 我是周星星!";
     }
 
-    @RequestMapping(value = "/login1", method = RequestMethod.GET)
+    @RequestMapping(value = "/wechat", method = RequestMethod.GET)
     public String sayHello(HttpServletRequest request) {
         try{
             String signature = request.getParameter("signature");
@@ -179,7 +182,7 @@ public class UserController {
         // TODO Auto-generated constructor stub
     }
 
-    @RequestMapping(value = "/wechat", method = RequestMethod.POST, produces = {"application/xml;charset=utf-8"})
+    @RequestMapping(value = "/login1", method = RequestMethod.POST, produces = {"application/xml;charset=utf-8"})
     public String doRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("===进来了");
         //将xml转为Map
@@ -253,6 +256,60 @@ public class UserController {
             return"创建菜单失败 token = " + WechatConfig.getToken();
         }
         return "创建菜单成功 token = " + WechatConfig.getToken();
+    }
+    @RequestMapping(value = "/getVoice", method = RequestMethod.POST)
+    public void getVoice(HttpServletResponse response, HttpServletRequest request, @RequestBody Map<String, String> params) {
+        String mediaId= params.get("media-id");
+        InputStream inputStream = null;
+        ServletOutputStream outputStream = null;
+        HttpsURLConnection httpUrlConn = null;
+        try {
+            String requrl = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=40_CpuemLKljYtkjt8F8NnJ3gyp1KRiNGdibiDogqCzFAf2EDtD41LhEWbqdveC1ZprCp5aiOqkR8mPHv9mIhxVyxO_DStH-nRIMenWRkqabpU6G0aYkQurxnnX0owTadY-gV7vxu_0gVQVuKY-QWVeAIAMSR&media_id=" + mediaId;
+            URL url = new URL(requrl);
+            httpUrlConn = (HttpsURLConnection) url.openConnection();
+            httpUrlConn.setDoOutput(true);
+            httpUrlConn.setDoInput(true);
+            httpUrlConn.setUseCaches(false);
+            // 设置请求方式（GET/POST）
+            httpUrlConn.setRequestMethod("GET");
+            httpUrlConn.connect();
+            String dispoSition = httpUrlConn.getHeaderField("Content-disposition");
+            String contentType = httpUrlConn.getHeaderField("Content-Type");
+            String contentLength = httpUrlConn.getHeaderField("Content-Length");
+            System.err.println("dispoSition = " + dispoSition + "\ncontentType = " + contentType  + "\ncontentLength = " + contentLength);
+            if (!StringUtils.isEmpty(dispoSition)) {
+                response.setHeader("Content-disposition", dispoSition);
+            }
+            if (!StringUtils.isEmpty(contentType)) {
+                response.setHeader("Content-Type", contentType);
+            }
+            if (!StringUtils.isEmpty(contentLength)) {
+                response.setHeader("Content-Length", contentLength);
+            }
+            // 获取微信返回的输入流
+            inputStream = httpUrlConn.getInputStream();
+            outputStream = response.getOutputStream();
+            int len;
+            int bytesum=0;
+            byte[] buffer = new byte[1024 * 10];
+            while ((len = inputStream.read(buffer)) != -1) {
+                bytesum += len;
+                outputStream.write(buffer, 0, len);
+            }
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(httpUrlConn != null) {
+                    httpUrlConn.disconnect();
+                }
+                inputStream.close();
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void main(String[] args) {

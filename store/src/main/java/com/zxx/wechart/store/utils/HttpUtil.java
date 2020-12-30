@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * @Author ： 周星星
@@ -86,5 +89,33 @@ public class HttpUtil {
             client.dispatcher().executorService().shutdown();
         }
         return result;
+    }
+
+    public static String doHttpGetRequest(String requestUrl) throws IOException {
+        HttpURLConnection httpConnection = null;
+        try {
+            URL url = new URL(requestUrl);
+            httpConnection = (HttpURLConnection) url.openConnection();
+            httpConnection.setDoOutput(true);
+            httpConnection.setRequestMethod("GET");
+            httpConnection.connect();
+            InputStream inputStream = httpConnection.getInputStream();
+            return readInputStreamAsString(inputStream,
+                    httpConnection.getContentLength());
+        } finally {
+            if (httpConnection != null) {
+                httpConnection.disconnect();
+            }
+        }
+    }
+
+    public static String readInputStreamAsString(InputStream inputStream,
+                                                 int length) throws IOException {
+        if (inputStream != null) {
+            byte[] streamBytes = new byte[length];
+            inputStream.read(streamBytes);
+            return new String(streamBytes, "UTF-8");
+        }
+        return null;
     }
 }
