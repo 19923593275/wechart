@@ -160,7 +160,7 @@ public class UserController {
         return "你好! 我是周星星!";
     }
 
-    @RequestMapping(value = "/wechat", method = RequestMethod.GET)
+    @RequestMapping(value = "/login1", method = RequestMethod.GET)
     public String sayHello(HttpServletRequest request) {
         try{
             String signature = request.getParameter("signature");
@@ -182,7 +182,7 @@ public class UserController {
         // TODO Auto-generated constructor stub
     }
 
-    @RequestMapping(value = "/login1", method = RequestMethod.POST, produces = {"application/xml;charset=utf-8"})
+    @RequestMapping(value = "/wechat", method = RequestMethod.POST, produces = {"application/xml;charset=utf-8"})
     public String doRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("===进来了");
         //将xml转为Map
